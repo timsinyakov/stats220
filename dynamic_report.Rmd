@@ -1,0 +1,84 @@
+---
+title: My dynamic report
+output: html_fragment
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo=FALSE, message=FALSE, warning=FALSE, error=FALSE)
+
+```
+
+```{css}
+h1 {
+  
+  text-align: center;
+}
+
+h2 {
+  color: blue;
+}
+
+p {
+  font-size: 21px;
+  line-height: 1.5;
+}
+```
+# Ad Targeting Analysis
+
+## The data from the survey is used to display informative graphs about ad quality and targetting ability
+
+
+```{r}
+library(tidyverse)
+logged_data <- read.csv("https://docs.google.com/spreadsheets/d/e/2PACX-1vQCRD79AZ4i5kLfX39hGQqFilIeh27TamkTeAuKF2-vToXw2e1pL4nrnchxemf4X_K4oCRPJSMncsg3/pub?output=csv")
+
+latest_data <- logged_data %>% 
+  rename(Time=Timestamp, 
+      Relevant=Is.this.ad.relevant.to.you...1.being.least.and.5.being.most., 
+      Category=What.category.does.the.ad.fall.into., 
+      Repeat=Have.you.seen.the.same.or.similar.ad.before.)
+
+mean_relevance <-latest_data$Relevant %>% mean()
+
+
+yes_repeat <- latest_data[latest_data$Repeat == "Yes",] 
+yes_mean_relevance <- yes_repeat$Relevant %>% mean()
+
+no_repeat <- latest_data[latest_data$Repeat == "No",]
+no_mean_relevance <- no_repeat$Relevant %>% mean()
+
+total <- length(latest_data)
+
+
+```
+
+## Bar graph below shows the most common category of instagram ads. Only one category per ad can be selected. The total number of ads is: `r total`
+
+```{r}
+latest_data %>%
+  ggplot() +
+  geom_bar(aes(x = Category), fill = "lightblue") +
+  theme(axis.text.x = element_text(angle = 90, hjust = 1)) +
+  labs(title = "Most common categories", x = "Categories", y = "Count", caption = "Source: google form",
+)
+```
+
+## Bar graph below shows how relevant ads are to me. The relevancy scale is from 1 to 5 with 1 being the least relevant and 5 being most relevant
+
+```{r}
+latest_data %>% 
+  ggplot() + geom_bar(aes(x = Relevant) , fill = "#FFDBBB") +
+  labs(title = "Number of ads by relevancy",
+       caption = "Source: google form",
+       x = "Relevant score given")
+
+
+```
+
+## Ad stats
+
+The ads mean targeting ability is `r round(mean_relevance, 2)` on a scale of 1 to 5.
+
+The ads that have repeated have a relevancy of `r round(yes_mean_relevance, 2)` and the ads that are new
+have the relevancy of `r round(no_mean_relevance, 2)`
+
