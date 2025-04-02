@@ -47,7 +47,7 @@ yes_mean_relevance <- yes_repeat$Relevant %>% mean()
 no_repeat <- latest_data[latest_data$Repeat == "No",]
 no_mean_relevance <- no_repeat$Relevant %>% mean()
 
-total <- length(latest_data)
+total <- latest_data %>% count()
 
 
 ```
