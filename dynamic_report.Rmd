@@ -47,12 +47,12 @@ yes_mean_relevance <- yes_repeat$Relevant %>% mean()
 no_repeat <- latest_data[latest_data$Repeat == "No",]
 no_mean_relevance <- no_repeat$Relevant %>% mean()
 
-total <- latest_data %>% count()
+
 
 
 ```
 
-## Bar graph below shows the most common category of instagram ads. Only one category per ad can be selected. The total number of ads is: `r total`
+## Bar graph below shows the most common category of instagram ads. Only one category per ad can be selected. The total number of ads is: `r nrow(latest_data)`
 
 ```{r}
 latest_data %>%
